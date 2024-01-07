@@ -5,4 +5,4 @@ Create web api
   -> dotnet new webapi -o src/AuctionService
 
 Add projet to sln
-  -> dotnet add sln src/AuctionService
+  -> dotnet sln add src/AuctionService
