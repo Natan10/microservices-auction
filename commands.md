@@ -6,3 +6,6 @@ Create web api
 
 Add projet to sln
   -> dotnet sln add src/AuctionService
+
+Add reference to project
+  -> dotnet add reference (path to project)
