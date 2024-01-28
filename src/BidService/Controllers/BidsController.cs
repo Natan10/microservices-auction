@@ -14,11 +14,13 @@ public class BidsController : ControllerBase
 {
   private readonly IMapper _mapper;
   private readonly IPublishEndpoint _publish;
+  private readonly GrpcAuctionClient _grpcAuctionClient;
 
-  public BidsController(IMapper mapper, IPublishEndpoint publish)
+  public BidsController(IMapper mapper, IPublishEndpoint publish, GrpcAuctionClient grpcAuctionClient)
   {
     _mapper = mapper;
     _publish = publish;
+    _grpcAuctionClient = grpcAuctionClient;
   }
 
   [Authorize]
@@ -28,7 +30,8 @@ public class BidsController : ControllerBase
     var auction = await DB.Find<Auction>().OneAsync(auctionId);
     if (auction == null)
     {
-      // TODO: check with auction service if that has auction
+      auction = _grpcAuctionClient.GetAuction(auctionId);
+      if (auction == null) return BadRequest("Cannot accept bids on this auction at this time");
       return NotFound();
     }
     if (auction.Seller == User.Identity.Name)
